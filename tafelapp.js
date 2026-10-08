@@ -38,7 +38,7 @@ function controleer() {
 
         vakje.classList.remove("is-valid", "is-invalid");
 
-        if (vakje.value !== "" && Number(vakje.value) === juist) {
+        if (vakje.value !== "" Number(vakje.value) === juist) {
             vakje.classList.add("is-valid");
             goed++;
         } else {
