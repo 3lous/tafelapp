@@ -1,4 +1,6 @@
 let puzzelTafel = 0;
+let puzzelSom = 1;
+let antwoordGecontroleerd = false;
 
 function toonHulp() {
     const tafel = Number(document.getElementById("inputHulp").value);
@@ -12,43 +14,63 @@ function toonHulp() {
 }
 
 function maakPuzzel() {
-    puzzelTafel = Number(document.getElementById("inputPuzzel").value);
-    const output = document.getElementById("outputPuzzel");
-    output.innerHTML = "";
-
-    for (let i = 1; i <= 10; i++) {
-        output.innerHTML += `
-      <div class="input-group mb-2">
-        <span class="input-group-text">${i} x ${puzzelTafel} =</span>
-        <input type="number" class="form-control antwoord" data-som="${i}">
-      </div>`;
+    const tafelInput = document.getElementById("inputPuzzel");
+    if (tafelInput.value.trim() === "") {
+        document.getElementById("resultaat").textContent = "Vul eerst een tafel in.";
+        return;
     }
 
+    puzzelTafel = Number(tafelInput.value);
+    puzzelSom = 1;
+    antwoordGecontroleerd = false;
+    toonSom();
     document.getElementById("checkKnop").classList.remove("d-none");
+    document.getElementById("checkKnop").textContent = "Controleer";
     document.getElementById("resultaat").textContent = "";
 }
 
-function controleer() {
-    const vakjes = document.querySelectorAll(".antwoord");
-    let goed = 0;
+function toonSom() {
+    const output = document.getElementById("outputPuzzel");
+    output.innerHTML = `
+      <p>Som ${puzzelSom} van 10</p>
+      <div class="input-group mb-2">
+        <span class="input-group-text">${puzzelSom} x ${puzzelTafel} =</span>
+        <input type="number" class="form-control antwoord" aria-label="Antwoord op ${puzzelSom} keer ${puzzelTafel}">
+      </div>`;
+}
 
-    vakjes.forEach(function (vakje) {
-        const i = Number(vakje.dataset.som);
-        const juist = i * puzzelTafel;
-
-        vakje.classList.remove("is-valid", "is-invalid");
-
-        if (vakje.value !== "" && Number(vakje.value) === juist) {
-            vakje.classList.add("is-valid");
-            goed++;
-        } else {
-            vakje.classList.add("is-invalid");
-        }
-    });
-
+function verwerkAntwoord() {
+    const knop = document.getElementById("checkKnop");
     const resultaat = document.getElementById("resultaat");
-    if (goed === vakjes.length) {
+
+    if (antwoordGecontroleerd) {
+        puzzelSom++;
+        antwoordGecontroleerd = false;
+        toonSom();
+        knop.textContent = "Controleer";
+        resultaat.textContent = "";
+        return;
+    }
+
+    const antwoord = document.querySelector(".antwoord");
+    const juist = puzzelSom * puzzelTafel;
+    antwoord.classList.remove("is-valid", "is-invalid");
+
+    if (antwoord.value !== "" && Number(antwoord.value) === juist) {
+        antwoord.classList.add("is-valid");
+        antwoord.disabled = true;
+
+        if (puzzelSom === 10) {
+            resultaat.textContent = "je mag naar huis!";
+            knop.classList.add("d-none");
+            return;
+        }
+
+        antwoordGecontroleerd = true;
+        knop.textContent = "Volgende som";
         resultaat.textContent = "Je mag naar huis!";
     } else {
+        antwoord.classList.add("is-invalid");
         resultaat.textContent = "Maak een afspraak met Ids";
     }
+}
