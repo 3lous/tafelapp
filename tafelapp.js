@@ -48,7 +48,7 @@ function controleer() {
 
     const resultaat = document.getElementById("resultaat");
     if (goed === vakjes.length) {
-        resultaat.textContent = "Alles goed! 🎉";
+        resultaat.textContent = "je mag naar huis!";
     } else {
         resultaat.textContent = goed + " van de " + vakjes.length + " goed.";
     }
