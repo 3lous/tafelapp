@@ -48,8 +48,7 @@ function controleer() {
 
     const resultaat = document.getElementById("resultaat");
     if (goed === vakjes.length) {
-        resultaat.textContent = "je mag naar huis!";
+        resultaat.textContent = "Je mag naar huis!";
     } else {
-        resultaat.textContent = goed + " van de " + vakjes.length + " goed.";
+        resultaat.textContent = "Maak een afspraak met Ids";
     }
-}
